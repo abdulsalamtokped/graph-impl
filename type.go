@@ -14,6 +14,7 @@ type (
 	GraphInterface interface {
 		AddVertex(vertex int) error
 		AddEdge(to int, from int) error
+		GetVertex(vertex int) *Vertex
 		Print()
 	}
 )
@@ -34,8 +35,8 @@ func (g *Graph) AddVertex(vertex int) error {
 	return nil
 }
 func (g *Graph) AddEdge(to, from int) error {
-	toVertex := g.getVertex(to)
-	fromVertex := g.getVertex(from)
+	toVertex := g.GetVertex(to)
+	fromVertex := g.GetVertex(from)
 
 	if toVertex == nil || fromVertex == nil {
 		return fmt.Errorf("Not a valid edge from %d ---> %d", from, to)
@@ -56,10 +57,7 @@ func (g *Graph) Print() {
 		fmt.Println()
 	}
 }
-
-// helper
-// getVertex will return a vertex point if exists or return nil
-func (g *Graph) getVertex(vertex int) *Vertex {
+func (g *Graph) GetVertex(vertex int) *Vertex { // getVertex will return a vertex point if exists or return nil
 	for i, v := range g.vertices {
 		if v.key == vertex {
 			return g.vertices[i]
@@ -67,6 +65,8 @@ func (g *Graph) getVertex(vertex int) *Vertex {
 	}
 	return nil
 }
+
+// helper
 func contains(v []*Vertex, key int) bool {
 	for _, v := range v {
 		if v.key == key {
